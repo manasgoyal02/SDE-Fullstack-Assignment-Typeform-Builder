@@ -29,7 +29,8 @@ export default function PublicForm({ params }: { params: Promise<{ slug: string 
 
     let nextStep = step + 1;
     const rule = form.settings.logic;
-    if (rule?.sourceQuestionId === question.id && value.trim().toLowerCase() === rule.expectedValue.trim().toLowerCase()) {
+    const matchesBranch = rule?.sourceQuestionId === question.id && (question.type === 'yes_no' ? ['yes', 'no'].includes(value.trim().toLowerCase()) && value.trim().toLowerCase() === rule.expectedValue.trim().toLowerCase() : value.trim().toLowerCase() === rule.expectedValue.trim().toLowerCase());
+    if (matchesBranch) {
       const target = form.questions.findIndex((item) => item.id === rule.targetQuestionId);
       if (target > step) nextStep = target;
     }
@@ -83,7 +84,7 @@ export default function PublicForm({ params }: { params: Promise<{ slug: string 
       <Input question={question} value={answers[question.id] || ''} change={(value) => { setAnswers({ ...answers, [question.id]: value }); setError(''); }} choose={advance} />
       {error && <div className="field-error">! {error}</div>}
       <div className="respond-actions"><button className="ok-btn" onClick={() => void advance()}>{step === form.questions.length - 1 ? 'Submit' : 'OK'} <b>-&gt;</b></button>{step > 0 && <button className="back-btn" onClick={back}>&lt;- Back</button>}</div>
-      <small className="hint">Use <kbd>Enter</kbd> to continue · <kbd>&lt;-</kbd><kbd>-&gt;</kbd> to navigate</small>
+      <small className="hint">Use <kbd>Enter</kbd> to continue Â· <kbd>&lt;-</kbd><kbd>-&gt;</kbd> to navigate</small>
     </main>
     <footer><span>Press Enter to continue</span><span>Made with <b>typeflow</b></span></footer>
   </div>;
@@ -95,3 +96,5 @@ function Input({ question, value, change, choose }: { question: Question; value:
   if (question.type === 'rating') return <div className="public-rating">{question.options.map((option) => <button key={option} onClick={() => void choose(option)} className={value === option ? 'chosen' : ''}>{option}</button>)}</div>;
   return question.type === 'long_text' ? <textarea autoFocus className="public-input textarea" value={value} onChange={(event) => change(event.target.value)} placeholder="Type your answer here..." /> : <input autoFocus className="public-input" type={question.type === 'email' ? 'email' : question.type === 'number' ? 'number' : 'text'} value={value} onChange={(event) => change(event.target.value)} placeholder={question.type === 'email' ? 'name@example.com' : question.type === 'number' ? 'Type a number...' : 'Type your answer here...'} />;
 }
+
+

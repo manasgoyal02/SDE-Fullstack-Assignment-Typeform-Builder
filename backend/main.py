@@ -155,7 +155,19 @@ def read_form(form_id: str):
 def update_form(form_id: str, payload: FormInput):
     with db() as con:
         get_form(con, form_id)
-        con.execute("UPDATE forms SET title=?,settings=?,updated_at=? WHERE id=?", (payload.title, json.dumps(payload.settings), now(), form_id))
+        settings = dict(payload.settings)
+        logic = settings.get("logic")
+        if isinstance(logic, dict):
+            source_id = logic.get("sourceQuestionId")
+            target_id = logic.get("targetQuestionId")
+            source_index = next((i for i, q in enumerate(payload.questions) if q.get("id") == source_id), -1)
+            target_index = next((i for i, q in enumerate(payload.questions) if q.get("id") == target_id), -1)
+            if source_index < 0 or target_index <= source_index + 1:
+                raise HTTPException(
+                    status_code=422,
+                    detail="Logic jump must target a question at least two positions after the source question.",
+                )
+        con.execute("UPDATE forms SET title=?,settings=?,updated_at=? WHERE id=?", (payload.title, json.dumps(settings), now(), form_id))
         save_questions(con, form_id, payload.questions)
         return form_data(con, get_form(con, form_id))
 

@@ -1,7 +1,5 @@
 # Typeflow — Typeform-style Form Builder
 
-# Typeflow — Typeform-style Form Builder
-
 Full-stack Typeform clone with a drag-and-drop builder, shareable public forms, SQLite persistence, and response results.
 
 ## Stack

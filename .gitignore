@@ -1,0 +1,13 @@
+# Python
+backend/.venv/
+backend/__pycache__/
+backend/typeflow.db
+
+# Next.js
+frontend/node_modules/
+frontend/.next/
+frontend/.next-dev/
+frontend/.npm-cache/
+
+# Environment files
+.env*

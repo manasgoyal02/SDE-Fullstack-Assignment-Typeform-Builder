@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: typeflow-api
+    env: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /health
+    disk:
+      name: typeflow-data
+      mountPath: /data
+      sizeGB: 1

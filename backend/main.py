@@ -17,7 +17,19 @@ from pydantic import BaseModel, Field
 
 DB_PATH = Path(os.getenv("TYPEFLOW_DB_PATH", str(Path(__file__).with_name("typeflow.db"))))
 app = FastAPI(title="Typeflow API", version="1.0.0")
-app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:3000"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:3001",
+        "http://localhost:3002",
+        "https://frontend-sigma-nine-79.vercel.app",
+    ],
+    allow_origin_regex=r"https://[a-z0-9-]+\.vercel\.app",
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @contextmanager
 def db():

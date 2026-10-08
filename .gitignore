@@ -11,3 +11,10 @@ frontend/.npm-cache/
 
 # Environment files
 .env*
+
+# Deployment CLI caches and logs
+.railway-npm-cache/
+.vercel-cache/
+.vercel-data/
+.vercel-npm-cache/
+frontend/.vercel-npm-cache/
